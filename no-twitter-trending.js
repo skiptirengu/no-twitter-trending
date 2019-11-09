@@ -12,11 +12,23 @@
 
 (function() {
     'use strict';
-    var handle = setInterval(function () {
-        var $trending = window.jQuery('div[aria-label="Timeline: Trending now"]');
-        if ($trending.length > 0) {
-            $trending.remove();
-            clearInterval(handle);
+
+    var interval = null;
+
+    function waitLoading() {
+        if (interval) {
+            clearInterval(interval);
         }
-    }, 200);
+
+        interval = setInterval(function () {
+            var $trending = window.jQuery('div[aria-label="Timeline: Trending now"]');
+            if ($trending.length > 0) {
+                $trending.remove();
+                clearInterval(interval);
+            }
+        }, 200);
+    }
+
+    window.jQuery(document).on('click', 'a', waitLoading);
+    waitLoading();
 })();
